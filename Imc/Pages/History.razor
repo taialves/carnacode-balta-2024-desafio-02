@@ -1,0 +1,54 @@
+﻿@page "/history"
+@using Imc.Models;
+@using Imc.Services;
+@using System.Globalization;
+@inject IMedidaService MedidaService;
+@inject NavigationManager NavigationManager;
+
+<section class="content-history">
+    
+        <header>
+        <i @onclick="Home" class="fa fa-2x fa-home arrow-voltar"></i>
+            <div class="img-box">
+                <img src="/icon.png" alt="">
+            </div>
+            <h1>Historico</h1>
+            <input class="search" type="text" placeholder="Pesquisar...">
+        </header>
+
+        <section class="box-card-hist">
+
+        @foreach(var medida in medidas)
+        {
+            <article class="h-card">
+                <div class="h-card-header">
+                    <h5>@medida.Titulo</h5>
+                    <span class="today">@medida.CreatedAt.ToString("dd 'de' MMM", new CultureInfo("pt-BR"))</span>
+                </div>
+                <p class="text">@medida.Texto</p>
+
+            </article>
+        }
+
+        </section>
+    
+
+
+
+</section>
+
+
+
+@code {
+    public List<Medida> medidas { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        medidas = await MedidaService.GetMedidas();
+    }
+
+    private void Home()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}

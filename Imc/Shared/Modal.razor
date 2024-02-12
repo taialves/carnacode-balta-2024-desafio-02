@@ -1,0 +1,33 @@
+﻿<div class="i-modal">
+    <div class="i-modal-content">
+        
+        <div class="img-box">
+            <img src="/icon.png" />
+        </div>
+        
+        <h1>@Titulo</h1>
+        <p>@Texto</p>
+        <div class="btn-box">
+            <button @onclick="Registrar">registrar medidas</button>
+            <button @onclick="ExibirHistorico">ver meu historico</button>
+        </div>
+
+    </div>
+</div>
+
+@code {
+    [Parameter] public EventCallback onclickRegistrar { get; set; }
+    [Parameter] public EventCallback onclickHistorico { get; set; }
+    [Parameter] public string Titulo { get; set; }
+    [Parameter] public string Texto { get; set; }
+
+    private void Registrar()
+    {
+        onclickRegistrar.InvokeAsync();
+    }
+    private void ExibirHistorico()
+    {
+        onclickHistorico.InvokeAsync();
+    }
+
+}
