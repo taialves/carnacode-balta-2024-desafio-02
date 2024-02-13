@@ -127,6 +127,26 @@ main.page {
     margin-bottom: 20px;
 }
 
+.field-alert{
+    color: red;
+    font-size:12px;
+}
+.imc-field{
+    display: flex;
+    align-items:center;
+}
+.imc-field span {
+    background-color: rgba(77, 77, 77, 0.2);
+    height: 50px;
+    width: 50px;
+    padding: 0px 10px;
+    border: 1px solid #ccc;
+    border-radius: 0 10px 10px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-left: none;
+}
 [type="number"],
 select {
     border: 1px solid #ccc;
@@ -134,7 +154,6 @@ select {
     height: 50px;
     font-weight: 600;
     font-size: 1.5rem;
-    border-radius: 10px;
     width: 100%;
     color: #666666;
     background-color: rgba(77, 77, 77, 0.08);
@@ -171,8 +190,10 @@ label {
     font-weight: 600;
     font-size: 1rem;
     cursor: pointer;
+}
 
-
+.btn-box button:active {
+    transform: scale(0.95);
 }
 
 button:nth-child(1) {
@@ -180,31 +201,38 @@ button:nth-child(1) {
     border: none;
     color:#000;
 }
-    button:nth-child(1):hover {
-        background-color: #33a1a1;
-        border: none;
-        color:#fff;
-    }
 
 .btn-box button:nth-child(2) {
     background-color: transparent;
     border: 4px solid #45FEFE;
+}
+
+@keyframes slideIn {
+    0% {
+        opacity: 0;
+        transform:  scale(0.5);
     }
 
-
+    100% {
+        opacity: 1;
+        transform:  scale(1);
+    }
+}
 /* estido para o Modal */
 .i-modal {
     position: absolute;
     top: 0;
-    left: 0;
+    left:0;
+    animation: slideIn 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     width: 100%;
     height: 100%;
-    background-color: #2E1462;
-    display: flex;
+    background-color: rgb(29 0 75 / 68%);
+    backdrop-filter: blur(10px);
     justify-content: center;
     align-items: center;
     border-radius: 25px;
 }
+
 .i-modal-content {
     background-color: #fff;
     max-width:295px;
