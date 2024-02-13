@@ -10,9 +10,26 @@
 
 <section class="content-imc-main">
     <h1>Calculo de IMC</h1>
-
-    <input type="number" @bind="Altura" placeholder="Altura">
-    <input type="number" @bind="Peso" placeholder="Peso">
+    
+    <div >
+        <div class ="imc-field">
+            <input type="number" @bind="Altura" placeholder="Altura"><span>Cm</span>
+        </div>
+        @if (IsInvalidFieldAltura)
+        {
+            <span class="field-alert">*Campo obrigatório!</span>
+        }
+        
+    </div>
+    <div>
+        <div class="imc-field">
+            <input type="number" @bind="Peso" placeholder="Peso"><span>Kg</span>
+        </div>
+        @if (IsInvalidFieldPeso)
+        {
+            <span class="field-alert">*Campo obrigatório!</span>
+        }
+    </div>
     <select name="cars" id="cars">
         <option value="masculino">Masculino</option>
         <option value="feminino">Feminino</option>
@@ -21,21 +38,21 @@
         <input type="checkbox" id="esqueciSenha"> Eu tenho 65 anos ou mais
     </label>
 
-    <div class="btn-box">
-        <button @onclick="CalcularIMC">Calcular meu IMC</button>
-        <button>Entenda o calculo</button>
+    <div class="btn-box"> 
+        <button @onclick="CalcularIMC"> Calcular meu IMC</button>
+        <button >Entenda o calculo</button>
     </div>
 
     <!-- Renderizar o modal dinamicamente -->
-    @if (showModal)
-    {
-        <Modal  
-            onclickRegistrar="RegistrarMedidas" 
-            onclickHistorico="ExibirHistorico" 
-            Texto="@medida.Texto"
-            Titulo="@medida.Titulo"
-        />
-    }
+   
+    <Modal  
+        @ref="modalRef"
+        onclickRegistrar="RegistrarMedidas" 
+        onclickHistorico="ExibirHistorico" 
+        Texto="@medida.Texto"
+        Titulo="@medida.Titulo"
+    />
+   
 
 </section>
 
@@ -43,28 +60,32 @@
 
 @code {
     private bool showModal = false;
-    public double Altura { get; set; }
-    public double Peso { get; set; }
+    private bool IsInvalidFieldAltura => Altura == null || Altura <= 0 ;
+    private bool IsInvalidFieldPeso => Peso == null || Peso <= 0;
+    private Modal modalRef;
+    public double? Altura { get; set; }
+    public double? Peso { get; set; }
     public string? Titulo { get; set; }
     public string? Texto { get; set; }
     public DateTime CreatedAt { get; set; }
-    public Medida medida { get; set; }
-    public List<Medida> medidas { get; set; }
+    public Medida medida { get; set; } = new Medida();
+    public List<Medida> medidas { get; set; } = new();
+
     private void CalcularIMC()
     {
 
-        if (Altura == 0 || Peso == 0) return;
+        if (IsInvalidFieldAltura || IsInvalidFieldPeso) return;
 
         // Lógica para calcular o IMC usando Altura, Peso, Sexo e Idoso
-        double alturaEmMetros = Altura / 100.0; // Converter altura de centímetros para metros
-        double ResultadoIMC = Peso / (alturaEmMetros * alturaEmMetros);
+        double alturaEmMetros = (double)Altura / 100.0; // Converter altura de centímetros para metros
+        double ResultadoIMC = (double)Peso / (alturaEmMetros * alturaEmMetros);
 
 
         if(ResultadoIMC < 18.5)
         {
             medida.Titulo = "⛔ Magreza";
             medida.Texto = "Cuidado você está em Magreza,  dê uma atenção para sua saúde";
-        }else if(ResultadoIMC >= 18.5 && ResultadoIMC <= 24.9)
+        }else if(ResultadoIMC >= 18.5 && ResultadoIMC <= 26)
         {
             medida.Titulo = "✅ Parabens";
             medida.Texto = "Você está no peso ideal, continue mantendo este estilo!";
@@ -84,16 +105,18 @@
         medidas.Add(medida);
 
         await MedidaService.SaveMedidas(medidas);
+        modalRef.FecharModal();
         NavigationManager.NavigateTo("/history");
     }
 
     private void ExibirHistorico()
     {
+        modalRef.FecharModal();
         NavigationManager.NavigateTo("/history");
     }
     private void ShowModal()
     {
-        showModal = true;
+        modalRef.AbrirModal();
     }
    
     protected override async Task OnInitializedAsync()

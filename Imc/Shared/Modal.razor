@@ -1,4 +1,4 @@
-﻿<div class="i-modal">
+﻿<div class="i-modal" style="@ModalStyle">
     <div class="i-modal-content">
         
         <div class="img-box">
@@ -20,6 +20,7 @@
     [Parameter] public EventCallback onclickHistorico { get; set; }
     [Parameter] public string Titulo { get; set; }
     [Parameter] public string Texto { get; set; }
+    private string ModalStyle { get; set; } = "display: none;";
 
     private void Registrar()
     {
@@ -28,6 +29,15 @@
     private void ExibirHistorico()
     {
         onclickHistorico.InvokeAsync();
+    }
+
+    public void AbrirModal()
+    {
+        ModalStyle = "display: flex;";
+    }
+
+    public void FecharModal()
+    {
     }
 
 }
